@@ -5,11 +5,13 @@ export function List() {
   const { students } = useList()
 
   return <div className=''>
-    {students && students.map((student) => Object.keys(student).map((key) => (
+    {students && students.map((student) => 
         <div>
-          <label>{key}: {student[key]}</label>
+          <label>RA: {student.ra}</label>
+          <label>CPF: {student.cpf}</label>
+          <label>Nome: {student.nome}</label>
+          <label>Email: {student.email}</label>
         </div>
-      ))
     )}
   </div>
 }
