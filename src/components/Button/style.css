@@ -1,0 +1,14 @@
+.button-student {
+  background-color: rgb(87, 165, 139);
+  
+  height: 2rem;
+  width: 5rem;
+  
+  border: solid 2px;
+  border-radius: 5px;
+
+}
+
+.button-student:hover {
+  cursor: pointer;
+}
