@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAllStudents } from "services/list-students.service";
 
-export function useListStudents(){
+export function useList(){
 
   const [students, setStudents] = useState<any[]>([]);
 
