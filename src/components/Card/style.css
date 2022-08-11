@@ -1,0 +1,38 @@
+.container-card {
+  border: solid 1px;
+  border-radius: 10px;
+  margin: 1rem 2rem;
+
+  padding: .5rem;
+
+  display: flex;
+  align-items: center;
+
+  flex-direction: row;
+
+  justify-content: space-between;
+}
+
+.container-card__contents {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  gap: .5rem;
+}
+
+.container-card__contents > label {
+  min-width: 180px;
+}
+
+.container-card__buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+@media (max-width: 440px) {
+  .container-card__buttons {
+    flex-wrap: wrap;
+  }
+}
