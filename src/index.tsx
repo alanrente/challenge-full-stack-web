@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'antd/dist/antd.min.css'
 import './index.css';
 import axios from 'axios';
 import { Students } from 'pages/Students';
+import { ModalAntdProvider } from 'contexts/ModalAntdContext';
 
 axios.defaults.baseURL = process.env.REACT_APP_API;
 
@@ -11,6 +13,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Students />
+    <ModalAntdProvider>
+      <Students />
+    </ModalAntdProvider>
   </React.StrictMode>
 );

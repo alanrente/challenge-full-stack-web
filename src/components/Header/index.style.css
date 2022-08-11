@@ -2,3 +2,12 @@
   background-color: rgb(62, 116, 163);
   height: 150px;
 }
+
+.content-modal__inputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-modal__inputs > input {
+  margin-bottom: 1rem;
+}

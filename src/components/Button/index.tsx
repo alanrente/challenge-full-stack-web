@@ -2,13 +2,13 @@ import './style.css'
 
 interface ButtonProps {
   children?: any;
-  cancelar?: boolean;
+  del?: boolean;
   onClick?: () => void;
 }
 
-export function Button({ children, cancelar, onClick}: ButtonProps) {
+export function Button({ children, del, onClick}: ButtonProps) {
 
-  return <button className={`${cancelar ? 'button-student__cancelar' : ''} button-student`} onClick={onClick}>
+  return <button className={`${del ? 'button-student__del' : ''} button-student`} onClick={onClick}>
     {children}
   </button>
 }
