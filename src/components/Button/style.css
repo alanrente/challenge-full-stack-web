@@ -12,3 +12,7 @@
 .button-student:hover {
   cursor: pointer;
 }
+
+.button-student__cancelar {
+  background-color: rgb(231, 231, 231);
+}
