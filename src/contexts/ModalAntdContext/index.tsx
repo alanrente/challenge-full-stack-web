@@ -7,6 +7,8 @@ import { getStudentByRA } from "services/list-students.service";
 import { useInternalModalAntdContext } from "./index.hook";
 import { BackEndError, IModalAntd } from "./index.types";
 
+import './style.css'
+
 export const ModalAntdContext = createContext<IModalAntd>({} as any);
 
 export function ModalAntdProvider({ children }: any) {
@@ -22,7 +24,7 @@ export function ModalAntdProvider({ children }: any) {
 
   const { openNotificationWithIcon } = useNotification();
 
-  const { handleUpdateStudent } = useInternalModalAntdContext();
+  const { handleUpdateStudent, handleCreateStudent } = useInternalModalAntdContext();
 
   async function handleGetStudent(ra: string) {
     try {
@@ -58,15 +60,22 @@ export function ModalAntdProvider({ children }: any) {
   async function handleOk() {
     setConfirmLoading(true);
 
-    const sendStudent: StudentUpdateDto = { ra, cpf, nome, email }
+    const sendStudent: StudentDto = { ra, cpf, nome, email }
 
     if (disabled) {
-      delete sendStudent.ra;
-      delete sendStudent.cpf;
 
-      await handleUpdateStudent(ra, sendStudent)
+      const sendStudentUpdate: StudentUpdateDto = sendStudent;
+
+      delete sendStudentUpdate.ra;
+      delete sendStudentUpdate.cpf;
+
+      await handleUpdateStudent(ra, sendStudentUpdate);
+    } else {
+      await handleCreateStudent(sendStudent);
     }
     
+
+
     setVisible(false);
     setConfirmLoading(false);
   };
@@ -97,16 +106,38 @@ export function ModalAntdProvider({ children }: any) {
       >
         <div className="content-modal__inputs">
           <label htmlFor="content-ra">RA: </label>
-          <input disabled={disabled} value={ra} id="content-ra" onChange={(event) => setRa(event.target.value)} />
+          <input 
+            type={'number'} 
+            disabled={disabled} 
+            value={ra} 
+            id="content-ra" 
+            onChange={(event) => {
+              const value = event.target.value;
+              if (value.length > 6) return;
+              setRa(value)
+            }} />
+          <span>{ra.length}/6</span>
 
           <label htmlFor="content-cpf">CPF: </label>
-          <input disabled={disabled} value={cpf} id="content-cpf" onChange={(event) => setCpf(event.target.value)} />
+          <input 
+          type={'number'} 
+          disabled={disabled} 
+          value={cpf} 
+          id="content-cpf" 
+          onChange={(event) => {
+            const value = event.target.value;
+            if (value.length > 11) return;
+            setCpf(event.target.value)
+          }} />
+          <span>{cpf.length}/11</span>
 
           <label htmlFor="content-nome">Nome: </label>
           <input id="content-nome" value={nome} onChange={(event) => setNome(event.target.value)} />
+          <br />
           
           <label htmlFor="content-email">Email: </label>
           <input id="content-email" value={email} onChange={(event) => setEmail(event.target.value)} />
+          <span className="content-email__invalid">{email.length > 0 && !email.includes('@') ? 'Invalid email' : ''}</span>
         </div>
       </Modal>
     </ModalAntdContext.Provider>

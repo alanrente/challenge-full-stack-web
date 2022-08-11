@@ -1,5 +1,5 @@
 import axios from "axios";
-import { StudentUpdateDto } from "components/List/index.types";
+import { StudentDto, StudentUpdateDto } from "components/List/index.types";
 
 export async function getAllStudents() {
   const { data } = await axios.get('/students');
@@ -15,6 +15,12 @@ export async function getStudentByRA(ra: string) {
 
 export async function updateStudent(ra: string, payload: StudentUpdateDto) {
   const { data } = await axios.put(`/students/${ra}`, payload);
+
+  return data;
+}
+
+export async function createStudent(payload: StudentDto) {
+  const { data } = await axios.post('/students', payload);
 
   return data;
 }

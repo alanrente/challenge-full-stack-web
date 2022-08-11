@@ -1,6 +1,8 @@
-import { StudentUpdateDto } from "components/List/index.types";
+import { AxiosError } from "axios";
+import { StudentDto, StudentUpdateDto } from "components/List/index.types";
 import { useNotification } from "hooks/useNotification";
-import { updateStudent } from "services/list-students.service";
+import { createStudent, updateStudent } from "services/list-students.service";
+import { BackEndError } from "./index.types";
 
 export function useInternalModalAntdContext() {
 
@@ -10,6 +12,23 @@ export function useInternalModalAntdContext() {
     setTimeout(() => {
       window.location.reload();
     }, 1000); 
+  }
+
+  async function handleCreateStudent(payload: StudentDto) {
+    try {
+      const retorno = await createStudent(payload);
+
+      handleReload();
+      console.log(retorno);
+    } catch (error: any) {
+      console.log("error", error);
+      const axiosError: AxiosError = error;
+      console.log("axiosError", axiosError);
+      const err: BackEndError = axiosError.response?.data as any;
+      console.log("err", err)
+      
+      return openNotificationWithIcon("error", "Error", JSON.stringify(err.message[0]))
+    }
   }
 
   async function handleUpdateStudent(ra: string, payload: StudentUpdateDto) {
@@ -26,6 +45,7 @@ export function useInternalModalAntdContext() {
   }
 
   return {
-    handleUpdateStudent
+    handleUpdateStudent,
+    handleCreateStudent
   }
 }
