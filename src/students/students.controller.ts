@@ -41,7 +41,17 @@ export class StudentsController {
 
     if (fieldNotEditable) throw new BadRequestException(`Field ${fieldNotEditable} cannot editable`);
 
-    await this.studentsService.update(ra, updateStudentDto);
+    const validatedStudentUpdate = new UpdateStudentDto();
+
+    Object.keys(updateStudentDto).forEach((key) => {
+      validatedStudentUpdate[key] = updateStudentDto[key];
+    });
+
+    await validateOrReject(validatedStudentUpdate).catch((errors) => {
+      throw new BadRequestException(errors.map(({ constraints }) => constraints));
+    });
+
+    await this.studentsService.update(ra, validatedStudentUpdate);
 
     return await this.findOne(ra);
   }

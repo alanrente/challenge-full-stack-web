@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -32,6 +32,8 @@ export class StudentsService {
   }
 
   async remove(ra: string) {
-    await this.studentRepository.delete(ra);
+    await this.studentRepository.delete(ra).catch((err) => {
+      throw new InternalServerErrorException(err.message);
+    });
   }
 }
