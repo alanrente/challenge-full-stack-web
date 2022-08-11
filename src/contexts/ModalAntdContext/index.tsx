@@ -84,6 +84,13 @@ export function ModalAntdProvider({ children }: any) {
     setVisible(false);
   };
 
+  function verifyEmail(email: string) {
+    const hasAt = email.includes('@');
+    const hasDot = email.includes('.')
+
+    return !hasAt || !hasDot;
+  }
+
   useEffect(() => {
     if (!visible) {
       setRa('')
@@ -137,7 +144,7 @@ export function ModalAntdProvider({ children }: any) {
           
           <label htmlFor="content-email">Email: </label>
           <input id="content-email" value={email} onChange={(event) => setEmail(event.target.value)} />
-          <span className="content-email__invalid">{email.length > 0 && !email.includes('@') ? 'Invalid email' : ''}</span>
+          <span className="content-email__invalid">{email.length > 0 && verifyEmail(email) ? 'Invalid email' : ''}</span>
         </div>
       </Modal>
     </ModalAntdContext.Provider>
