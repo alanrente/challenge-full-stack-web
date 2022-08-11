@@ -1,10 +1,10 @@
 import { Modal } from "antd";
 import { AxiosError } from "axios";
-import { useList } from "components/List/index.hook";
 import { StudentDto, StudentUpdateDto } from "components/List/index.types";
 import { useNotification } from "hooks/useNotification";
 import { createContext, useEffect, useState } from "react";
-import { getStudentByRA, updateStudent } from "services/list-students.service";
+import { getStudentByRA } from "services/list-students.service";
+import { useInternalModalAntdContext } from "./index.hook";
 import { BackEndError, IModalAntd } from "./index.types";
 
 export const ModalAntdContext = createContext<IModalAntd>({} as any);
@@ -21,6 +21,8 @@ export function ModalAntdProvider({ children }: any) {
   const [email, setEmail]  = useState('');
 
   const { openNotificationWithIcon } = useNotification();
+
+  const { handleUpdateStudent } = useInternalModalAntdContext();
 
   async function handleGetStudent(ra: string) {
     try {
@@ -39,23 +41,6 @@ export function ModalAntdProvider({ children }: any) {
       const err: BackEndError = axiosError.response?.data as any;
       
       return openNotificationWithIcon("error", err.error, err.message)
-    }
-  }
-
-  async function handleUpdateStudent(ra: string, payload: StudentUpdateDto) {
-    try {
-      const retorno = await updateStudent(ra, payload);
-
-      if (retorno) {
-        openNotificationWithIcon('success', 'Aluno atualizado!', `Aluno ${retorno.nome} atualizado`)
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000); 
-      }
-
-      console.log(retorno);
-    } catch (error) {
-      console.log('error', error)
     }
   }
 
