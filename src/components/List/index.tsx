@@ -9,7 +9,7 @@ export function List() {
 
   const { showModal } = useModalAntdContext();
 
-  return <div className=''>
+  return <div>
     {students && students.map((student, i) => 
       <Card 
         key={i}
