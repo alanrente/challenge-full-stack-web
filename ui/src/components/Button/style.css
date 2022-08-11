@@ -1,0 +1,24 @@
+.button-student {
+  background-color: rgb(87, 165, 139);
+  
+  height: 2rem;
+  min-width: 5rem;
+  max-width: 15rem;
+  
+  border: solid 2px #000;
+  border-radius: 5px;
+
+  color: #fff;
+
+  font-weight: 600;
+
+}
+
+.button-student:hover {
+  cursor: pointer;
+}
+
+.button-student__del {
+  background-color: rgb(231, 231, 231);
+  color:rgb(228, 33, 33)
+}

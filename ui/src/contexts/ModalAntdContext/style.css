@@ -1,0 +1,12 @@
+.content-modal__inputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-modal__inputs > span {
+  margin-bottom: 1rem;
+}
+
+.content-email__invalid {
+  color: rgb(221, 14, 14);
+}
