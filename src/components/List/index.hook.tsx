@@ -16,6 +16,6 @@ export function useList(){
     getStudents()
   }, []);
 
-  return {students, getStudents}
+  return { students, getStudents }
 
 }

@@ -1,9 +1,10 @@
 import { Modal } from "antd";
 import { AxiosError } from "axios";
-import { StudentDto } from "components/List/index.types";
+import { useList } from "components/List/index.hook";
+import { StudentDto, StudentUpdateDto } from "components/List/index.types";
 import { useNotification } from "hooks/useNotification";
 import { createContext, useEffect, useState } from "react";
-import { getStudentByRA } from "services/list-students.service";
+import { getStudentByRA, updateStudent } from "services/list-students.service";
 import { BackEndError, IModalAntd } from "./index.types";
 
 export const ModalAntdContext = createContext<IModalAntd>({} as any);
@@ -21,11 +22,11 @@ export function ModalAntdProvider({ children }: any) {
 
   const { openNotificationWithIcon } = useNotification();
 
-  async function getStudent(ra: string) {
+  async function handleGetStudent(ra: string) {
     try {
       const student: StudentDto = await getStudentByRA(ra);
   
-      const {cpf, nome, email} = student
+      const { cpf, nome, email } = student
   
       setCpf(cpf);
       setNome(nome);
@@ -41,26 +42,48 @@ export function ModalAntdProvider({ children }: any) {
     }
   }
 
+  async function handleUpdateStudent(ra: string, payload: StudentUpdateDto) {
+    try {
+      const retorno = await updateStudent(ra, payload);
+
+      if (retorno) {
+        openNotificationWithIcon('success', 'Aluno atualizado!', `Aluno ${retorno.nome} atualizado`)
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000); 
+      }
+
+      console.log(retorno);
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
   function showModal(ra?: string) {
     if(ra && ra?.length > 0) {
       setRa(ra);
       setDisabled(true)
-      getStudent(ra)
+      handleGetStudent(ra)
       return;
     }
 
     setVisible(true);
   };
 
-  function handleOk() {
+  async function handleOk() {
     setConfirmLoading(true);
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-      console.log({
-        ra, cpf, nome, email
-      })
-    }, 2000);
+
+    const sendStudent: StudentUpdateDto = { ra, cpf, nome, email }
+
+    if (disabled) {
+      delete sendStudent.ra;
+      delete sendStudent.cpf;
+
+      await handleUpdateStudent(ra, sendStudent)
+    }
+    
+    setVisible(false);
+    setConfirmLoading(false);
   };
 
   function handleCancel() {
@@ -68,7 +91,13 @@ export function ModalAntdProvider({ children }: any) {
   };
 
   useEffect(() => {
-    if (!visible) setDisabled(false)
+    if (!visible) {
+      setRa('')
+      setCpf('')
+      setNome('')
+      setEmail('')
+      setDisabled(false)
+    }
   }, [visible]);
 
   return (
@@ -83,16 +112,16 @@ export function ModalAntdProvider({ children }: any) {
       >
         <div className="content-modal__inputs">
           <label htmlFor="content-ra">RA: </label>
-          <input disabled={disabled} id="content-ra" onChange={(event) => setRa(event.target.value)} />
+          <input disabled={disabled} value={ra} id="content-ra" onChange={(event) => setRa(event.target.value)} />
 
           <label htmlFor="content-cpf">CPF: </label>
-          <input disabled={disabled} id="content-cpf" onChange={(event) => setCpf(event.target.value)} />
+          <input disabled={disabled} value={cpf} id="content-cpf" onChange={(event) => setCpf(event.target.value)} />
 
           <label htmlFor="content-nome">Nome: </label>
-          <input id="content-nome" onChange={(event) => setNome(event.target.value)} />
+          <input id="content-nome" value={nome} onChange={(event) => setNome(event.target.value)} />
           
           <label htmlFor="content-email">Email: </label>
-          <input id="content-email" onChange={(event) => setEmail(event.target.value)} />
+          <input id="content-email" value={email} onChange={(event) => setEmail(event.target.value)} />
         </div>
       </Modal>
     </ModalAntdContext.Provider>
