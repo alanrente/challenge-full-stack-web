@@ -1,6 +1,10 @@
 import { Modal } from "antd";
+import { AxiosError } from "axios";
+import { StudentDto } from "components/List/index.types";
+import { useNotification } from "hooks/useNotification";
 import { createContext, useEffect, useState } from "react";
-import { IModalAntd } from "./index.types";
+import { getStudentByRA } from "services/list-students.service";
+import { BackEndError, IModalAntd } from "./index.types";
 
 export const ModalAntdContext = createContext<IModalAntd>({} as any);
 
@@ -15,10 +19,34 @@ export function ModalAntdProvider({ children }: any) {
   const [nome, setNome] = useState('');
   const [email, setEmail]  = useState('');
 
+  const { openNotificationWithIcon } = useNotification();
+
+  async function getStudent(ra: string) {
+    try {
+      const student: StudentDto = await getStudentByRA(ra);
+  
+      const {cpf, nome, email} = student
+  
+      setCpf(cpf);
+      setNome(nome);
+      setEmail(email);
+
+      setVisible(true);
+      
+    } catch (error: any) {
+      const axiosError: AxiosError = error;
+      const err: BackEndError = axiosError.response?.data as any;
+      
+      return openNotificationWithIcon("error", err.error, err.message)
+    }
+  }
+
   function showModal(ra?: string) {
     if(ra && ra?.length > 0) {
       setRa(ra);
       setDisabled(true)
+      getStudent(ra)
+      return;
     }
 
     setVisible(true);

@@ -5,3 +5,9 @@ export async function getAllStudents() {
 
   return data;
 }
+
+export async function getStudentByRA(ra: string) {
+  const { data } = await axios.get(`/students/:${ra}`);
+
+  return data;
+}

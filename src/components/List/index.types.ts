@@ -1,4 +1,4 @@
-export interface StudentsDto {
+export interface StudentDto {
   ra: string;
   cpf: string;
   nome: string;
