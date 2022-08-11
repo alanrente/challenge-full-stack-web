@@ -12,10 +12,10 @@ export function List() {
   return <div>
     {students && students.map((student, i) => 
       <Card 
-        key={i}
+        key={`${i}`}
         student={student}>     
         <Button onClick={() => showModal && showModal(student.ra)}>Editar</Button>
-        <Button del>Deletar</Button>
+        <Button del onClick={() => showModal && showModal(student.ra, true)}>Deletar</Button>
       </Card>
     )}
   </div>

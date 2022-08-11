@@ -24,3 +24,9 @@ export async function createStudent(payload: StudentDto) {
 
   return data;
 }
+
+export async function removeStudent(ra: string) {
+  const { data } = await axios.delete(`/students/${ra}`);
+
+  return data;
+}

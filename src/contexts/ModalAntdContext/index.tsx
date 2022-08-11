@@ -1,11 +1,7 @@
 import { Modal } from "antd";
-import { AxiosError } from "axios";
-import { StudentDto, StudentUpdateDto } from "components/List/index.types";
-import { useNotification } from "hooks/useNotification";
-import { createContext, useEffect, useState } from "react";
-import { getStudentByRA } from "services/list-students.service";
+import { createContext } from "react";
 import { useInternalModalAntdContext } from "./index.hook";
-import { BackEndError, IModalAntd } from "./index.types";
+import { IModalAntd } from "./index.types";
 
 import './style.css'
 
@@ -13,93 +9,24 @@ export const ModalAntdContext = createContext<IModalAntd>({} as any);
 
 export function ModalAntdProvider({ children }: any) {
 
-  const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [disabled, setDisabled] = useState(false)
-
-  const [ra, setRa] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [nome, setNome] = useState('');
-  const [email, setEmail]  = useState('');
-
-  const { openNotificationWithIcon } = useNotification();
-
-  const { handleUpdateStudent, handleCreateStudent } = useInternalModalAntdContext();
-
-  async function handleGetStudent(ra: string) {
-    try {
-      const student: StudentDto = await getStudentByRA(ra);
-  
-      const { cpf, nome, email } = student
-  
-      setCpf(cpf);
-      setNome(nome);
-      setEmail(email);
-
-      setVisible(true);
-      
-    } catch (error: any) {
-      const axiosError: AxiosError = error;
-      const err: BackEndError = axiosError.response?.data as any;
-      
-      return openNotificationWithIcon("error", err.error, err.message)
-    }
-  }
-
-  function showModal(ra?: string) {
-    if(ra && ra?.length > 0) {
-      setRa(ra);
-      setDisabled(true)
-      handleGetStudent(ra)
-      return;
-    }
-
-    setVisible(true);
-  };
-
-  async function handleOk() {
-    setConfirmLoading(true);
-
-    const sendStudent: StudentDto = { ra, cpf, nome, email }
-
-    if (disabled) {
-
-      const sendStudentUpdate: StudentUpdateDto = sendStudent;
-
-      delete sendStudentUpdate.ra;
-      delete sendStudentUpdate.cpf;
-
-      await handleUpdateStudent(ra, sendStudentUpdate);
-    } else {
-      await handleCreateStudent(sendStudent);
-    }
-    
-
-
-    setVisible(false);
-    setConfirmLoading(false);
-  };
-
-  function handleCancel() {
-    setVisible(false);
-  };
-
-  function verifyEmail(email: string) {
-    const hasAt = email.includes('@');
-    const hasDot = email.includes('.')
-
-    return !hasAt || !hasDot;
-  }
-
-  useEffect(() => {
-    if (!visible) {
-      setRa('')
-      setCpf('')
-      setNome('')
-      setEmail('')
-      setDisabled(false)
-    }
-  }, [visible]);
+  const {
+    visible,
+    showModal,
+    handleOk,
+    remove,
+    confirmLoading,
+    handleCancel,
+    disabled,
+    ra,
+    setRa,
+    cpf,
+    setCpf,
+    nome,
+    setNome,
+    email,
+    setEmail,
+    verifyEmail
+  } = useInternalModalAntdContext();
 
   return (
     <ModalAntdContext.Provider value={{showModal}}>
@@ -107,10 +34,13 @@ export function ModalAntdProvider({ children }: any) {
       <Modal
         visible={visible}
         onOk={handleOk}
+        okText={remove ? 'Sim' : ''}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        cancelText={remove ? 'Não': ''}
         closable={false}
       >
+        {!remove ? (
         <div className="content-modal__inputs">
           <label htmlFor="content-ra">RA: </label>
           <input 
@@ -146,6 +76,11 @@ export function ModalAntdProvider({ children }: any) {
           <input id="content-email" value={email} onChange={(event) => setEmail(event.target.value)} />
           <span className="content-email__invalid">{email.length > 0 && verifyEmail(email) ? 'Invalid email' : ''}</span>
         </div>
+        ) : (
+          <>
+            Deseja deletar o aluno?
+          </>
+        )}
       </Modal>
     </ModalAntdContext.Provider>
   );

@@ -1,10 +1,10 @@
 import { CardProps } from "./index.types";
 import './style.css'
 
-export function Card({student, children, key}: CardProps) {
+export function Card({student, children}: CardProps) {
 
   return (
-    <div key={key} className="container-card">
+    <div className="container-card">
       <div className="container-card__contents">
         <label>RA: {student.ra}</label>
         <label>CPF: {student.cpf}</label>

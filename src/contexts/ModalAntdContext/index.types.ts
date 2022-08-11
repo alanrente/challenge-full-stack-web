@@ -1,5 +1,5 @@
 export interface IModalAntd {
-  showModal?: (ra?: string) => void;
+  showModal?: (ra?: string, remove?: boolean) => void;
 }
 
 export interface BackEndError {
