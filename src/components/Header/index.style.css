@@ -1,4 +1,30 @@
 .header-student {
   background-color: rgb(62, 116, 163);
   height: 150px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-around;
+
+  padding: 0 2rem;
+
+}
+
+.header-student__title {
+  color: #fff !important;
+}
+
+.header-student__button {
+  width: 100%;
+  display: flex;
+
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  
+  align-content: flex-end;
+}
+
+.header-student__button > button {
+  min-width: 10rem;
 }

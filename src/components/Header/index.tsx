@@ -1,3 +1,4 @@
+import { Typography } from 'antd';
 import { Button } from 'components/Button';
 import { useModalAntdContext } from 'hooks/useModalAntdContext';
 import './index.style.css'
@@ -8,7 +9,10 @@ export function Header(){
 
   return (
     <div className="header-student">
-      <Button onClick={showModal}>Cadastrar aluno</Button>
+      <Typography.Title className="header-student__title">Sistema de cadastro de alunos</Typography.Title>
+      <div className="header-student__button">
+        <Button onClick={showModal}>Cadastrar aluno</Button>
+      </div>
     </div>
   );
 }
